@@ -22,7 +22,9 @@ ThreadPool::ThreadPool() : stop(false)
         HANDLE thread = (HANDLE)_beginthreadex(NULL, 0, [](void* param) -> unsigned {
             return static_cast<ThreadPool*>(param)->run(param);
             }, this, 0, NULL);
-        workers.emplace_back(thread);
+        if (thread != 0) {
+            workers.emplace_back(thread);
+        }
 #elif defined(__linux__)
         pthread_t thread;
         int result = pthread_create(&thread, nullptr, [](void* param) -> void* {
