@@ -24,9 +24,9 @@ public:
 
 private:
 #if defined (_WIN32) || defined (_WIN64)
-    unsigned __stdcall run(void* param);
+    unsigned __stdcall run();
 #else
-    void* run(void* param);
+    void* run();
 #endif
 
 #if defined (_WIN32) || defined (_WIN64)

@@ -19,8 +19,8 @@ ThreadPool::ThreadPool() : stop(false)
     for (unsigned int i = 0; i < tCount; ++i)
     {
 #if defined(_WIN32)  || defined(_WIN64)
-        HANDLE thread = (HANDLE)_beginthreadex(NULL, 0, [](void* param) -> unsigned {
-            return static_cast<ThreadPool*>(param)->run(param);
+        HANDLE thread = (HANDLE) _beginthreadex(NULL, 0, [](void* param) -> unsigned {
+            return static_cast<ThreadPool*>(param)->run();
             }, this, 0, NULL);
         if (thread != 0) {
             workers.emplace_back(thread);
@@ -28,7 +28,7 @@ ThreadPool::ThreadPool() : stop(false)
 #elif defined(__linux__)
         pthread_t thread;
         int result = pthread_create(&thread, nullptr, [](void* param) -> void* {
-            return static_cast<ThreadPool*>(param)->run(param);
+            return static_cast<ThreadPool*>(param)->run();
             }, this);
         if (result == 0) {
             workers.emplace_back(thread);
@@ -79,9 +79,9 @@ bool ThreadPool::empty()
 }
 
 #if defined (_WIN32) || defined (_WIN64)
-unsigned __stdcall ThreadPool::run(void* param)
+unsigned __stdcall ThreadPool::run()
 #elif defined __linux__
-void* ThreadPool::run(void* param)
+void* ThreadPool::run()
 #endif
 {
     for (;;) {
