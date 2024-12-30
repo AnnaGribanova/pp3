@@ -34,7 +34,7 @@ ThreadPool::ThreadPool() : stop(false)
             workers.emplace_back(thread);
         }
 #else
-        throw runtime_error("Bad platform");
+        static_assert(false, "Bad platform");
 #endif
     }
     cout << "ThreadPool started, thread count: " << tCount << endl;
@@ -55,8 +55,7 @@ ThreadPool::~ThreadPool()
     {
 #if defined(_WIN32)  || defined(_WIN64)
         CloseHandle(workers[i]);
-
-#else
+#elif defined(__linux__)
         pthread_join(workers[i], nullptr);
 
 #endif
@@ -80,7 +79,7 @@ bool ThreadPool::empty()
 
 #if defined (_WIN32) || defined (_WIN64)
 unsigned __stdcall ThreadPool::run()
-#elif defined __linux__
+#else
 void* ThreadPool::run()
 #endif
 {

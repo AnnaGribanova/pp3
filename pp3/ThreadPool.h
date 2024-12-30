@@ -7,7 +7,7 @@
 #include <condition_variable>
 #if defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>
-#else
+#elif defined(__linux__)
 #include <pthread.h>
 #endif
 
@@ -31,7 +31,7 @@ private:
 
 #if defined (_WIN32) || defined (_WIN64)
     vector<HANDLE> workers;
-#else
+#elif defined(__linux__)
     vector<pthread_t> workers;
 #endif
     queue<function<void()>> tasks;
